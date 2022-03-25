@@ -1,0 +1,22 @@
+{
+  "name": "datom-crypto",
+  "version": "1.1.0",
+  "description": "cryto tools or functions using in datoms protocol.",
+  "main": "index.js",
+  "dependencies": {
+    "b4a": "^1.1.0",
+    "chalk": "^5.0.1",
+    "compact-encoding": "^2.5.1",
+    "jws": "^4.0.0",
+    "sodium-universal": "^3.0.0"
+  },
+  "devDependencies": {
+    "brittle": "^1.6.0",
+    "standard": "^14.3.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jerry.zhang <jerry.zhang.bill@gmail.com>",
+  "license": "MIT"
+}
