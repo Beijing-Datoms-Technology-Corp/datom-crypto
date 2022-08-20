@@ -1,6 +1,6 @@
 {
   "name": "datom-crypto",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "description": "cryto tools or functions using in datoms protocol.",
   "main": "index.js",
   "dependencies": {

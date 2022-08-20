@@ -9,7 +9,7 @@ const jws = require('jws')
 // test crypto.keyPair function ()
 const keyPair = crypto.keyPair()
 
-console.log('测试-----------------------\n')
+console.log('测试1: 生成keypair \n')
   
 console.log('publicKey is:\n',keyPair.publicKey.toString('hex'))
 console.log('secretKey is:\n',keyPair.secretKey.toString('hex'))
@@ -21,7 +21,7 @@ console.log('secretKey is:\n',keyPair.secretKey.toString('hex'))
 const keyPair1 = crypto.keyPair()
 const keyPair2 = crypto.keyPair()
 
-console.log('测试-----------------------\n')
+console.log('测试2: 验证key\n')
 
 console.log('验证两个key是否一致 Y/N：\n',crypto.validateKeyPair({ publicKey: keyPair1.publicKey, secretKey: keyPair2.secretKey }))
 console.log('验证两个key是否一致 Y/N:\n',crypto.validateKeyPair({ publicKey: keyPair1.publicKey, secretKey: keyPair1.secretKey }))
@@ -30,6 +30,9 @@ console.log('验证两个key是否一致 Y/N:\n',crypto.validateKeyPair({ public
 //用keyPair生成的secretkey密钥对message进行签名
 const message = b4a.from('hello world')
 const sig = crypto.sign(message, keyPair.secretKey)
+
+console.log(`测试3: 用secretkey对${message}签名\n`)
+
 console.log('sign message using secretKey is\n', sig.toString('hex'))
 
 
@@ -38,7 +41,7 @@ console.log('sign message using secretKey is\n', sig.toString('hex'))
 
 const data = b4a.from('hello world')
 
-console.log('测试-----------------------\n')
+console.log('测试4: 对输入的数据leaf node进行hash\n')
 
 
 console.log(`hash ${data} leaf is\n`,crypto.data(data).toString('hex')) 
@@ -57,7 +60,7 @@ const parent = crypto.parent({
     hash: crypto.data(data1)
   })
 
-console.log('测试-----------------------\n')
+  console.log('测试5: 对parent node进行hash\n')
 
 
 console.log('两个merkle tree的节点的父节点的hash\n',parent)
@@ -70,7 +73,7 @@ const roots = [
     { index: 9, size: 2, hash: b4a.alloc(32) }
   ]
 
-console.log('测试-----------------------\n')
+console.log('测试6: merkle tree的root hash\n')
 
 console.log('merkle tree的root hash is:\n',crypto.tree(roots).toString('hex'))
 
@@ -98,12 +101,30 @@ rawdata = {
   }
 }
 
+fakedata = {
+  Id01: {
+    'name': 'bob liu',
+    'banks': 'bxns',
+    'account': '223223-2922',
+    'balance':'27288282'
+  }
+}
+
 
 const sign_jws = jws.sign({
   header: { alg: 'HS256' },
   payload: rawdata,
   secret: keyPair.secretKey,
 });
+
+
+const sign_jws1 = jws.sign({
+  header: { alg: 'HS256' },
+  payload: fakedata,
+  secret: keyPair.secretKey,
+});
+
+console.log('测试7: 用输入的数据JWS encode/decode\n')
 
 console.log('JWS sign is :\n',sign_jws)
 

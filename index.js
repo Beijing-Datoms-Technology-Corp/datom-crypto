@@ -2,6 +2,7 @@ const sodium = require('sodium-universal')
 const c = require('compact-encoding')
 const b4a = require('b4a')
 
+// https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack
 const LEAF_TYPE = b4a.from([0])
 const PARENT_TYPE = b4a.from([1])
 const ROOT_TYPE = b4a.from([2])
@@ -107,17 +108,24 @@ if (sodium.sodium_free) {
 }
 
 exports.namespace = function (name, count) {
-  const buf = b4a.allocUnsafe(32 * count)
-  const list = new Array(count)
+  const ids = typeof count === 'number' ? range(count) : count
+  const buf = b4a.allocUnsafe(32 * ids.length)
+  const list = new Array(ids.length)
 
-  const ns = b4a.allocUnsafe(32)
-  sodium.crypto_generichash(ns, typeof name === 'string' ? b4a.from(name) : name)
+  const ns = b4a.allocUnsafe(33)
+  sodium.crypto_generichash(ns.subarray(0, 32), typeof name === 'string' ? b4a.from(name) : name)
 
   for (let i = 0; i < list.length; i++) {
-    const sub = list[i] = buf.subarray(32 * i, 32 * i + 32)
-    sub[0] = i
-    sodium.crypto_generichash(sub, sub.subarray(0, 1), ns)
+    list[i] = buf.subarray(32 * i, 32 * i + 32)
+    ns[32] = ids[i]
+    sodium.crypto_generichash(list[i], ns)
   }
 
   return list
+}
+
+function range (count) {
+  const arr = new Array(count)
+  for (let i = 0; i < count; i++) arr[i] = i
+  return arr
 }
